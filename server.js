@@ -3,8 +3,10 @@ import memberRouter from "./routes/member.js";
 import sequelize from "./connection.js";
 import bookRouter from "./routes/books.js";
 import libraryRouter from "./routes/library.js";
+import dotenv from "dotenv";
 
 const app = express();
+dotenv.config();
 app.use(express.json()); //middleware to parse request with json bodies, no need for json.parse
 app.use("/users", memberRouter);
 app.use("/books", bookRouter);
