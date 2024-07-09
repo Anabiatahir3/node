@@ -1,0 +1,27 @@
+import Sequelize from "sequelize";
+import sequelize from "../connection.js";
+import Library from "./library.model.js";
+
+export const Member = sequelize.define("Member", {
+  id: {
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+    unique: true,
+  },
+  name: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  libraryName: {
+    type: Sequelize.STRING,
+    references: {
+      model: Library,
+      key: "name",
+    },
+  },
+});
+Member.belongsTo(Library, {
+  foreignKey: "libraryName",
+});
+Library.hasMany(Member, { foreignKey: "libraryName" });
