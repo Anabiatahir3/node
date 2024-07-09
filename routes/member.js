@@ -1,7 +1,10 @@
 import express from "express";
+import {
+  addMember,
+  changeMemberShip,
+} from "../controllers/memberController.js";
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  res.send("hello there");
-});
+router.post("/", addMember);
 export default router;
+router.patch("/", changeMemberShip);

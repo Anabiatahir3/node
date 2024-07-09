@@ -2,7 +2,7 @@ import Sequelize from "sequelize";
 import sequelize from "../connection.js";
 import Library from "./library.model.js";
 
-export const Member = sequelize.define("Member", {
+const Member = sequelize.define("Member", {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true,
@@ -13,6 +13,7 @@ export const Member = sequelize.define("Member", {
     type: Sequelize.STRING,
     allowNull: false,
   },
+  email: { type: Sequelize.STRING, allowNull: false },
   libraryName: {
     type: Sequelize.STRING,
     references: {
@@ -25,3 +26,4 @@ Member.belongsTo(Library, {
   foreignKey: "libraryName",
 });
 Library.hasMany(Member, { foreignKey: "libraryName" });
+export default Member;

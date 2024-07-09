@@ -2,7 +2,7 @@ import Sequelize from "sequelize";
 import sequelize from "../connection.js";
 import Author from "./author.model.js";
 import Library from "./library.model.js";
-import { Member } from "./member.model.js";
+import Member from "./member.model.js";
 
 const Book = sequelize.define("book", {
   isbn: {

@@ -11,12 +11,13 @@ app.use(express.json()); //middleware to parse request with json bodies, no need
 app.use("/users", memberRouter);
 app.use("/books", bookRouter);
 app.use("/library", libraryRouter);
+app.use("/member", memberRouter);
 sequelize
   .authenticate()
   .then(() => {
     console.log("Connection established");
 
-    return sequelize.sync({ force: true });
+    return sequelize.sync({ alter: true });
     // `force: true` will drop and recreate the tables on each server start,
     //By using alter: true, you maintain data consistency while applying schema changes.
   })
