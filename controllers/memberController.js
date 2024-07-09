@@ -24,12 +24,9 @@ export const addMember = async (req, res) => {
   }
 };
 
-//controller to remove or change membership
-//if membership is removed, then the member is removed entirely and when changing the membership the meber is udated only
-const findUser = async (email) => {
-  let member = await Member.findOne({ where: { email: email } });
-  return member;
-};
+//controller to remove (delete member) or change membership
+//if membership is removed, then the member is removed entirely and when changing the membership the member is udated only
+
 export const changeMemberShip = async (req, res) => {
   const { status, newLibrary } = req.query;
   const { email } = req.body;
@@ -43,7 +40,6 @@ export const changeMemberShip = async (req, res) => {
         throw new Error("Library not registered");
       }
       const member = await Member.findOne({ where: { email: email } });
-      console.log("member", member);
       await member.update({ libraryName: newLibrary });
       await member.save();
       res.status(201).json({ member, msg: "Updated successfully" });

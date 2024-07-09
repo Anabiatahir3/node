@@ -1,9 +1,15 @@
 import mysql from "mysql2";
 import Sequelize from "sequelize";
-
-const sequelize = new Sequelize("node", "root", "12345", {
-  host: "localhost",
-  dialect: "mysql",
-});
+import dotenv from "dotenv";
+dotenv.config();
+const sequelize = new Sequelize(
+  process.env.DATABASE,
+  process.env.USER,
+  process.env.PASSWORD,
+  {
+    host: process.env.HOST,
+    dialect: process.env.DIALECT,
+  }
+);
 
 export default sequelize;
