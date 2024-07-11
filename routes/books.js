@@ -3,6 +3,8 @@ import {
   postBook,
   getAllBooks,
   searchBooks,
+  getAuthorBook,
+  changeBookIssuance,
 } from "../controllers/bookController.js";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -29,5 +31,6 @@ router.post("/", upload.single("coverImage"), postBook);
 
 router.get("/", getAllBooks);
 router.get("/search", searchBooks);
-
+router.get("/search/author", getAuthorBook);
+router.get("/issue/:memberId/:isbn", changeBookIssuance);
 export default router;

@@ -17,3 +17,11 @@ export const createLibrary = async (req, res) => {
     res.status(500).json({ error: error.message || "Internal server error" });
   }
 };
+
+//get all books of a specific author
+//member issues books
+//member returns books
+//get all books issued by a member
+//if a book is deleted then author is also deleted
+//delete a library if library deleted books should not be deleted rather library name should be null against them
+//edit an author

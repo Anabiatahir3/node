@@ -25,7 +25,7 @@ export const addMember = async (req, res) => {
 };
 
 //controller to remove (delete member) or change membership
-//if membership is removed, then the member is removed entirely and when changing the membership the member is udated only
+//if membership is removed, then the member is removed entirely and when changing the membership the member is updated only
 
 export const changeMemberShip = async (req, res) => {
   const { status, newLibrary } = req.query;

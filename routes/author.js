@@ -1,7 +1,8 @@
 import express from "express";
-import { postAuthor } from "../controllers/authorController";
+import { editAuthor, postAuthor } from "../controllers/authorController.js";
 const router = express.Router();
 
-router.post("/author", postAuthor);
+router.post("/", postAuthor);
+router.patch("/:id", editAuthor);
 
 export default router;

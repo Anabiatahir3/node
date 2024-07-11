@@ -3,13 +3,14 @@ import memberRouter from "./routes/member.js";
 import sequelize from "./connection.js";
 import bookRouter from "./routes/books.js";
 import libraryRouter from "./routes/library.js";
+import authorRouter from "./routes/author.js";
 
 const app = express();
 app.use(express.json()); //middleware to parse request with json bodies, no need for json.parse
-app.use("/users", memberRouter);
 app.use("/books", bookRouter);
 app.use("/library", libraryRouter);
 app.use("/member", memberRouter);
+app.use("/author", authorRouter);
 sequelize
   .authenticate()
   .then(() => {
