@@ -5,6 +5,7 @@ import {
   searchBooks,
   getAuthorBook,
   changeBookIssuance,
+  checkBookStatus,
 } from "../controllers/bookController.js";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -33,4 +34,5 @@ router.get("/", getAllBooks);
 router.get("/search", searchBooks);
 router.get("/search/author", getAuthorBook);
 router.get("/issue/:memberId/:isbn", changeBookIssuance);
+router.get("/status/:isbn", checkBookStatus);
 export default router;

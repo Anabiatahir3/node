@@ -3,7 +3,7 @@ import Author from "../models/author.model.js";
 import { Op } from "sequelize";
 import Library from "../models/library.model.js";
 import Member from "../models/member.model.js";
-
+import Transaction from "../models/transaction.model.js";
 export const postBook = async (req, res) => {
   const { isbn, name, authorName, libraryName } = req.body;
   const coverImagePath = req.file ? req.file.path : null;
@@ -23,7 +23,7 @@ export const postBook = async (req, res) => {
       isbn,
       name,
       authorId: author.id,
-      libraryName: library.libraryName,
+      libraryName: library.name,
       coverImagePath,
     });
 
@@ -70,7 +70,6 @@ export const getAuthorBook = async (req, res) => {
   const { name } = req.query;
   try {
     const bookAuthor = await Author.findOne({ where: { name: name } });
-    console.log("authorinfo", bookAuthor);
     if (bookAuthor) {
       const books = await Book.findAll({
         where: { authorId: bookAuthor.id },
@@ -99,17 +98,36 @@ export const changeBookIssuance = async (req, res) => {
       include: [Member],
     });
 
+    const member = await Member.findOne({
+      where: { id: memberId },
+    });
+
     if (!book) {
       return res.status(404).json({ error: "No book found with this ISBN" });
     }
-
+    if (book.libraryName !== member.libraryName) {
+      return res
+        .status(404)
+        .json({ error: "This book is not present in the library" });
+    }
     if (action === "issue") {
+      if (member.booksissued >= 4) {
+        return res
+          .status(400)
+          .json({ error: "Can not issue more than 4 books" });
+      }
       if (book.issuedMember == null) {
         await book.update({ issuedMember: memberId });
 
         const updatedBook = await Book.findOne({
           where: { isbn: isbn },
           include: [Member],
+        });
+        await member.update({ booksissued: member.booksissued + 1 });
+        await Transaction.create({
+          bookId: isbn,
+          memberId: memberId,
+          transactionType: "issue",
         });
 
         return res.status(200).json({ book: updatedBook });
@@ -123,6 +141,13 @@ export const changeBookIssuance = async (req, res) => {
         const updatedBook = await Book.findOne({
           where: { isbn: isbn },
           include: [Member],
+        });
+        await member.update({ booksissued: member.booksissued - 1 });
+
+        await Transaction.create({
+          bookId: isbn,
+          memberId: memberId,
+          transactionType: "deissue",
         });
 
         return res.status(200).json({ book: updatedBook });
@@ -138,6 +163,32 @@ export const changeBookIssuance = async (req, res) => {
     }
   } catch (error) {
     console.error(error.message);
+    return res
+      .status(500)
+      .json({ error: error.message || "Internal server error" });
+  }
+};
+
+export const checkBookStatus = async (req, res) => {
+  const { isbn } = req.params;
+  try {
+    const book = await Book.findOne({ where: { isbn: isbn } });
+    if (!book) {
+      return res.status(400).json({ error: "No book with this isbn found" });
+    } else {
+      const latestTransaction = await Transaction.scope({
+        method: ["latestForBook", isbn],
+      }).findOne();
+      if (!latestTransaction) {
+        return res.status(404).json({
+          error:
+            "No prior transaction has been done for this book. Book available to be issued.",
+        });
+      }
+      return res.status(200).json({ book, latestTransaction });
+    }
+  } catch (error) {
+    console.error(error);
     return res
       .status(500)
       .json({ error: error.message || "Internal server error" });

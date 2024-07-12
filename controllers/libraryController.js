@@ -22,6 +22,7 @@ export const createLibrary = async (req, res) => {
 //member issues books
 //member returns books
 //get all books issued by a member
-//if a book is deleted then author is also deleted
-//delete a library if library deleted books should not be deleted rather library name should be null against them
 //edit an author
+//for a particular book, get the last transaction that was done against its isbn to check whether a book is issue or available
+//No member can issue more than 4 books
+//no issuing of a book that you arent a member of

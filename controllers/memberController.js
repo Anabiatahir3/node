@@ -49,3 +49,29 @@ export const changeMemberShip = async (req, res) => {
     res.status(500).json({ error: error.message || "Internal server error" });
   }
 };
+
+export const editMember = async (req, res) => {
+  const updateData = req.body;
+  const { id } = req.params;
+  try {
+    if (updateData.email) {
+      const existingEmail = await Member.findOne({
+        where: { email: updateData.email },
+      });
+      if (existingEmail) {
+        throw new Error("Email already in use");
+      }
+    }
+    const member = await Member.findOne({ where: { id: id } });
+    if (member) {
+      await member.update(updateData);
+      await member.save();
+      return res.status(200).json({ member });
+    } else {
+      throw new Error("No member found against this id");
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message || "Internal server error" });
+  }
+};

@@ -14,6 +14,7 @@ const Member = sequelize.define("Member", {
     allowNull: false,
   },
   email: { type: Sequelize.STRING, allowNull: false },
+  booksissued: { type: Sequelize.INTEGER, defaultValue: 0 },
   libraryName: {
     type: Sequelize.STRING,
     references: {
